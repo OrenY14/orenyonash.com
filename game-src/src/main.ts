@@ -2212,11 +2212,7 @@ function updateGame() {
   }
 
   // Show/hide start prompt based on game state (always check this)
-  if (gameState.gameStarted || gameState.introAnimation.active) {
-    startPromptElement.style.display = "none";
-  } else {
-    startPromptElement.style.display = "block";
-  }
+  startPromptElement.style.display = "none";
 
   // Update cursor visibility based on game state
   updateCursorVisibility();
@@ -2684,6 +2680,28 @@ boardBtnElement.textContent = "🏆 טבלת השיאים";
 boardBtnElement.style.display = "none";
 boardBtnElement.addEventListener("click", () => { if (!gameState.gameStarted) openBoard(); });
 document.body.appendChild(boardBtnElement);
+
+// Big, obvious start button (the original small green prompt was easy to miss)
+const idleBarElement = document.createElement("div");
+idleBarElement.className = "idle-bar";
+idleBarElement.style.display = "none";
+const touchDevice = ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+idleBarElement.innerHTML = `<button type="button" class="start-btn">▶ התחילו לקפוץ!</button>
+  <p class="how">${touchDevice ? "במשחק: גררו את האצבע ימינה ושמאלה כדי לזוז · הקישו על המסך לקפיצה כפולה" : "או מקש רווח · חיצים ימינה/שמאלה כדי לזוז · רווח לקפיצה כפולה"}</p>
+  <div class="idle-row"></div>`;
+idleBarElement.querySelector(".idle-row")!.append(boardBtnElement, switchKidElement);
+idleBarElement.querySelector(".start-btn")!.addEventListener("click", (e) => {
+  (e.currentTarget as HTMLElement).blur();
+  unlockAudio();
+  startGame();
+});
+document.body.appendChild(idleBarElement);
+// the game loop skips its UI code while idle, so keep the start bar in sync on a timer
+setInterval(() => {
+  startPromptElement.style.display = "none";
+  const idle = !gameState.gameStarted && !gameState.introAnimation.active && !!selectedKid && !pickerOpen();
+  idleBarElement.style.display = idle ? "flex" : "none";
+}, 150);
 
 const pickerBoardBtn = document.createElement("button");
 pickerBoardBtn.type = "button";

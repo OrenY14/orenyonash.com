@@ -177,3 +177,25 @@ canvas {
   font: 900 1.05rem "Rubik", Arial, sans-serif; color: #fff; background: rgba(14,7,48,.75);
   border: 2px solid #c8ff3a; border-radius: 99px; padding: 10px 20px; cursor: pointer; touch-action: manipulation;
 }
+
+/* Start bar: one big start button + how-to + secondary buttons */
+.idle-bar {
+  position: fixed; z-index: 1002; left: 0; right: 0; bottom: calc(6% + env(safe-area-inset-bottom, 0px));
+  flex-direction: column; align-items: center; gap: 10px; padding: 0 16px; direction: rtl; pointer-events: none;
+}
+.idle-bar > * { pointer-events: auto; }
+.idle-bar .start-btn {
+  font: 900 clamp(1.4rem, 6.5vw, 1.9rem) "Rubik", Arial, sans-serif; color: #0e0730; background: #c8ff3a;
+  border: 0; border-radius: 22px; padding: 16px 38px; cursor: pointer; touch-action: manipulation;
+  box-shadow: 0 0 0 4px rgba(200,255,58,.25), 0 0 32px rgba(200,255,58,.6);
+  animation: start-pulse 1.4s ease-in-out infinite;
+}
+.idle-bar .start-btn:focus-visible { outline: 3px solid #2ee8ff; outline-offset: 4px; }
+@keyframes start-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .idle-bar .start-btn { animation: none; } }
+.idle-bar .how {
+  margin: 0; max-width: 34ch; text-align: center; color: #fff; font: 700 .95rem/1.4 "Rubik", Arial, sans-serif;
+  background: rgba(14,7,48,.7); border-radius: 12px; padding: 6px 12px;
+}
+.idle-bar .idle-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.idle-bar .switch-kid, .idle-bar .board-btn { position: static; transform: none; display: block !important; }
