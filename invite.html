@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="עוז, עידו, גילי ורני חוגגים 9! 🎉">
+<meta property="og:description" content="יום שישי, 27.11.2026 · 13:30 עד 15:30 · גרביטי פארק כפר סבא">
+<meta property="og:image" content="https://orenyonash.com/invite.png">
+<meta property="og:url" content="https://orenyonash.com/invite.html">
+<meta property="og:type" content="website">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Gravity Party 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Rubik+Moonrocks&display=swap">
+<style>
+/* Layout: single mobile-first column (max 480px), deep-space trampoline night with neon cards; every action is a big tap target. */
+:root {
+  --space: #0e0730;
+  --space-2: #2a0d63;
+  --lime: #c8ff3a;
+  --orange: #ff7a1a;
+  --cyan: #2ee8ff;
+  --pink: #ff3fae;
+  --ink: #ffffff;
+  --ink-soft: #cfc6ff;
+  --card: rgba(255,255,255,0.07);
+  --card-line: rgba(255,255,255,0.2);
+  --font-display: "Rubik Moonrocks", "Rubik", "Arial Black", sans-serif;
+  --font-body: "Rubik", "Segoe UI", Arial, sans-serif;
+  --radius: 22px;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { background: var(--space); color: var(--ink); }
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-inline: 16px;
+  padding-block: 20px 40px;
+  background:
+    radial-gradient(120% 50% at 50% 0%, var(--space-2) 0%, transparent 70%),
+    var(--space);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+#stars, #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#stars { z-index: 0; }
+#confetti { z-index: 50; }
+
+.page {
+  position: relative; z-index: 1;
+  max-width: 480px; margin-inline: auto;
+  display: flex; flex-direction: column; gap: 18px;
+  text-align: center;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+/* Hero */
+.hero { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px; }
+.pill {
+  font-weight: 700; font-size: 1.05rem; letter-spacing: .03em;
+  padding: 6px 20px; border-radius: 99px;
+  color: var(--space); background: var(--lime);
+  box-shadow: 0 0 22px rgba(200,255,58,.5);
+  transform: rotate(-3deg);
+}
+h1 { margin: 10px 0 0; line-height: 1.05; font-weight: 900; }
+.names {
+  display: block; font-size: clamp(2rem, 9.5vw, 2.75rem);
+  color: var(--lime); text-shadow: 0 0 18px rgba(200,255,58,.5);
+  text-wrap: balance;
+}
+.celebrate { display: block; font-size: clamp(1.6rem, 7vw, 2.1rem); margin-top: 4px; text-shadow: 0 0 16px rgba(46,232,255,.6); }
+
+.nine-stage { position: relative; width: min(300px, 80vw); height: 190px; margin-top: 4px; }
+.nine-btn {
+  position: absolute; inset: 0 0 30px; margin: auto;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-family: var(--font-display); font-size: 160px; line-height: .85;
+  -webkit-tap-highlight-color: transparent;
+}
+.nine {
+  display: inline-block;
+  background: linear-gradient(180deg, var(--lime) 0%, var(--cyan) 55%, var(--pink) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 14px rgba(46,232,255,.55)) drop-shadow(0 8px 0 rgba(255,63,174,.6));
+  animation: bounce 1.6s cubic-bezier(.3,0,.4,1) infinite;
+  transform-origin: 50% 100%;
+}
+.nine-btn.boost .nine { animation: superjump .9s cubic-bezier(.2,.7,.3,1); }
+.tramp { position: absolute; bottom: 0; left: 50%; translate: -50% 0; width: 260px; max-width: 100%; height: 40px; }
+.tramp ellipse { animation: stretch 1.6s cubic-bezier(.3,0,.4,1) infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+.badge {
+  position: absolute; top: 6px; inset-inline-start: -14px;
+  width: 84px; height: 84px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--orange); color: var(--space);
+  font-weight: 900; font-size: 1rem; line-height: 1.05;
+  transform: rotate(14deg); box-shadow: 0 0 22px rgba(255,122,26,.6);
+  animation: wobble 3s ease-in-out infinite;
+}
+.tap-hint { font-size: .85rem; color: var(--ink-soft); margin: 0; }
+.tagline { font-weight: 700; font-size: 1.35rem; line-height: 1.25; margin: 8px 0 0; text-wrap: balance; }
+.tagline em { font-style: normal; color: var(--lime); }
+
+/* Cards */
+.card {
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.label { font-size: .9rem; font-weight: 700; letter-spacing: .05em; color: var(--ink-soft); margin: 0; }
+
+/* Countdown */
+.count { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; direction: rtl; }
+.unit { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 2px; border-radius: 14px; background: rgba(0,0,0,.25); min-width: 0; }
+.unit b { font-size: clamp(1.6rem, 8vw, 2.2rem); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; color: var(--cyan); }
+.unit:first-child b { color: var(--lime); }
+.unit span { font-size: .8rem; color: var(--ink-soft); font-weight: 500; }
+.count-msg { font-size: 1.4rem; font-weight: 900; color: var(--lime); margin: 0; }
+
+/* Ticket */
+.ticket { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; padding: 0; gap: 0; }
+.ticket > div { padding: 18px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 0; }
+.ticket .date { background: linear-gradient(160deg, var(--pink), #b21dd6); }
+.ticket .date .label { color: #ffe1f3; }
+.ticket .time { border-inline-start: 3px dashed rgba(255,255,255,.35); }
+.day { font-size: 1.3rem; font-weight: 900; }
+.big { font-weight: 900; font-size: 4rem; line-height: .9; font-variant-numeric: tabular-nums; }
+.month { font-size: 1.15rem; font-weight: 700; }
+.from-to { display: grid; gap: 6px; margin-top: 4px; }
+.row { display: flex; align-items: baseline; justify-content: center; gap: 8px; }
+.ad { font-size: 1rem; width: 2.6em; text-align: start; font-weight: 700; color: var(--ink-soft); }
+.t { font-weight: 900; font-size: clamp(1.8rem, 9vw, 2.4rem); line-height: 1; font-variant-numeric: tabular-nums; color: var(--lime); }
+.t.end { color: var(--cyan); }
+
+/* Buttons */
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 10px 14px;
+  border-radius: 16px; border: 0;
+  font: 900 1.05rem/1.1 var(--font-body);
+  text-decoration: none; cursor: pointer;
+  color: var(--space); background: var(--ink);
+  transition: transform .12s ease, box-shadow .12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(.96); }
+.btn svg { width: 22px; height: 22px; flex: none; }
+.btn.full { grid-column: 1 / -1; }
+.btn.lime { background: var(--lime); box-shadow: 0 0 20px rgba(200,255,58,.35); }
+.btn.cyan { background: var(--cyan); }
+.btn.pink { background: var(--pink); color: var(--ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--card-line); }
+.btn.wa { background: #25d366; color: #062b14; }
+
+/* Place */
+.place-head { display: flex; align-items: center; gap: 14px; text-align: start; }
+.pin { flex: none; width: 44px; height: 44px; }
+.place-head .name { font-weight: 900; font-size: 1.5rem; line-height: 1.1; }
+.place-head .addr { color: var(--ink-soft); font-size: 1rem; }
+.place-head > div { min-width: 0; }
+
+/* Waiver */
+.waiver { border: 3px solid var(--lime); background: rgba(200,255,58,.08); box-shadow: 0 0 26px rgba(200,255,58,.2); }
+.waiver h2 { margin: 0; font-size: 1.5rem; font-weight: 900; line-height: 1.15; }
+.waiver .must { color: var(--lime); }
+.waiver p { margin: 0; color: var(--ink-soft); }
+.qr-wrap { display: none; align-items: center; gap: 14px; text-align: start; color: var(--ink-soft); font-size: .95rem; }
+.qr { flex: none; width: 112px; height: 112px; padding: 7px; background: #ffffff; border-radius: 12px; }
+.qr canvas, .qr img { width: 100% !important; height: 100% !important; display: block; }
+@media (min-width: 700px) and (hover: hover) { .qr-wrap { display: flex; } }
+
+.note { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); text-wrap: balance; }
+.note b { color: var(--ink); }
+
+.toast {
+  position: fixed; z-index: 60; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  translate: -50% 0; padding: 10px 18px; border-radius: 99px;
+  background: var(--lime); color: var(--space); font-weight: 900;
+  box-shadow: 0 6px 24px rgba(0,0,0,.4);
+}
+.copy-fallback { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--card-line); background: rgba(0,0,0,.3); color: var(--ink); font: inherit; text-align: center; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) scale(1.08, .9); }
+  12% { transform: translateY(-8px) scale(.95, 1.06); }
+  50% { transform: translateY(-30px) scale(1, 1); }
+  88% { transform: translateY(-4px) scale(.97, 1.04); }
+}
+@keyframes superjump {
+  0% { transform: translateY(0) scale(1.15, .8); }
+  45% { transform: translateY(-120px) rotate(360deg) scale(1.1); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+@keyframes stretch { 0%, 100% { transform: scaleY(1.9); } 15%, 85% { transform: scaleY(1); } }
+@keyframes wobble { 0%,100% { transform: rotate(14deg) scale(1); } 50% { transform: rotate(4deg) scale(1.07); } }
+@media (prefers-reduced-motion: reduce) {
+  .nine, .tramp ellipse, .badge { animation: none; }
+  .nine-btn.boost .nine { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main class="page" dir="rtl" lang="he">
+  <header class="hero">
+    <div class="pill">אתם מוזמנים!</div>
+    <h1><span class="names">עוז, עידו, גילי ורני</span><span class="celebrate">חוגגים</span></h1>
+    <div class="nine-stage">
+      <div class="badge" aria-hidden="true">יום<br>הולדת</div>
+      <button class="nine-btn" id="nine" type="button" aria-label="קפיצת יום הולדת"><span class="nine">9</span></button>
+      <svg class="tramp" viewBox="0 0 200 30" aria-hidden="true">
+        <defs><linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#2ee8ff"/><stop offset=".5" stop-color="#c8ff3a"/><stop offset="1" stop-color="#ff3fae"/></linearGradient></defs>
+        <ellipse cx="100" cy="12" rx="96" ry="7" fill="none" stroke="url(#tg)" stroke-width="4"/>
+        <line x1="22" y1="16" x2="14" y2="30" stroke="#cfc6ff" stroke-width="3" stroke-linecap="round"/>
+        <line x1="178" y1="16" x2="186" y2="30" stroke="#cfc6ff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="tap-hint">לחצו על ה-9 🎉</p>
+    <p class="tagline">באים <em>לקפוץ, לשחק ולהשתולל</em><br>במתחם השעשועים הענק!</p>
+  </header>
+
+  <section class="card" aria-labelledby="cd-label">
+    <p class="label" id="cd-label">עד הקפיצה הגדולה נשארו</p>
+    <div class="count" id="count">
+      <div class="unit"><b id="cd-d">--</b><span>ימים</span></div>
+      <div class="unit"><b id="cd-h">--</b><span>שעות</span></div>
+      <div class="unit"><b id="cd-m">--</b><span>דקות</span></div>
+      <div class="unit"><b id="cd-s">--</b><span>שניות</span></div>
+    </div>
+    <p class="count-msg" id="count-msg" hidden></p>
+  </section>
+
+  <section class="card ticket" aria-label="מועד המסיבה">
+    <div class="date">
+      <p class="label">מתי?</p>
+      <span class="day">יום שישי</span>
+      <span class="big">27</span>
+      <span class="month">בנובמבר 2026</span>
+    </div>
+    <div class="time">
+      <p class="label">באיזו שעה?</p>
+      <div class="from-to">
+        <div class="row"><span class="ad">משעה</span><span class="t">13:30</span></div>
+        <div class="row"><span class="ad">עד</span><span class="t end">15:30</span></div>
+      </div>
+    </div>
+  </section>
+  <a class="btn pink" id="gcal" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
+    הוסיפו ליומן Google
+  </a>
+
+  <section class="card" aria-label="מקום">
+    <div class="place-head">
+      <svg class="pin" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3C15.2 3 9 9.6 9 18c0 11 15 27 15 27s15-16 15-27C39 9.6 32.8 3 24 3z" fill="#ff7a1a"/><circle cx="24" cy="18" r="6" fill="#0e0730"/></svg>
+      <div>
+        <div class="name">גרביטי פארק</div>
+        <div class="addr">כפר סבא, רחוב היוצרים 6</div>
+      </div>
+    </div>
+    <div class="btns">
+      <a class="btn cyan" id="waze" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+        Waze
+      </a>
+      <a class="btn" id="gmaps" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Maps
+      </a>
+      <button class="btn ghost full" id="copy-addr" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9a2 2 0 002 2h3"/></svg>
+        העתקת הכתובת
+      </button>
+    </div>
+  </section>
+
+  <section class="card waiver" aria-labelledby="waiver-h">
+    <p class="label must">חשוב לפני שמגיעים</p>
+    <h2 id="waiver-h">אנא מלאו אישור קפיצה</h2>
+    <p>בלי אישור חתום אי אפשר לעלות על הטרמפולינות. זה לוקח דקה.</p>
+    <a class="btn lime" id="waiver-link" href="https://primesoft360.co.il/welcome-to-gravity/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      למילוי אישור הקפיצה
+    </a>
+    <div class="qr-wrap">
+      <div class="qr" id="qr" aria-label="קוד QR לטופס אישור קפיצה"></div>
+      <span>פתחתם מהמחשב? סרקו עם הטלפון ומלאו משם.</span>
+    </div>
+  </section>
+
+  <p class="note"><b>חוגגים עם חברי הכיתה!</b> אם תרצו לצרף משתתף נוסף, כתבו לנו בפרטי ונסדר (בעלות נוספת).</p>
+
+  <a class="btn wa" id="share-wa" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.8 11.9 11.9 0 004.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 001.8-1.3 2.3 2.3 0 00.2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+    שליחת הפרטים בוואטסאפ
+  </a>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function () {
+  var WAIVER = 'https://primesoft360.co.il/welcome-to-gravity/';
+  var ADDRESS = 'גרביטי פארק, רחוב היוצרים 6, כפר סבא';
+  var START = Date.UTC(2026, 10, 27, 11, 30); // 13:30 Israel time (UTC+2 in November)
+  var END = Date.UTC(2026, 10, 27, 13, 30);
+  var enc = encodeURIComponent;
+
+  // Links
+  document.getElementById('waze').href = 'https://waze.com/ul?q=' + enc('גרביטי פארק כפר סבא') + '&navigate=yes';
+  document.getElementById('gmaps').href = 'https://www.google.com/maps/search/?api=1&query=' + enc('Gravity Park Kfar Saba');
+  document.getElementById('gcal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + enc('יום הולדת 9 - עוז, עידו, גילי ורני')
+    + '&dates=20261127T113000Z/20261127T133000Z'
+    + '&location=' + enc(ADDRESS)
+    + '&details=' + enc('גרביטי פארק כפר סבא. אנא מלאו אישור קפיצה לפני שמגיעים: ' + WAIVER);
+  var waText = '🎉 עוז, עידו, גילי ורני חוגגים 9 בגרביטי פארק כפר סבא!\n'
+    + '📅 יום שישי, 27.11.2026 | משעה 13:30 עד 15:30\n\n'
+    + '✅ אנא מלאו אישור קפיצה לפני שמגיעים:\n' + WAIVER;
+  document.getElementById('share-wa').href = 'https://wa.me/?text=' + enc(waText);
+
+  // QR (desktop only, shown by CSS)
+  try { new QRCode(document.getElementById('qr'), { text: WAIVER, width: 256, height: 256, colorDark: '#0e0730', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); }
+  catch (e) { document.querySelector('.qr-wrap').hidden = true; }
+
+  // Toast
+  var toastEl = document.getElementById('toast'), toastT;
+  function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { toastEl.hidden = true; }, 2200); }
+
+  // Copy address
+  var copyBtn = document.getElementById('copy-addr');
+  copyBtn.addEventListener('click', function () {
+    function fallback() {
+      var f = document.querySelector('.copy-fallback');
+      if (!f) { f = document.createElement('input'); f.className = 'copy-fallback'; f.readOnly = true; f.value = ADDRESS; f.setAttribute('aria-label', 'כתובת'); copyBtn.after(f); }
+      f.focus(); f.select();
+      toast('סמנו והעתיקו את הכתובת');
+    }
+    try {
+      navigator.clipboard.writeText(ADDRESS).then(function () { toast('הכתובת הועתקה ✓'); }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  // Countdown
+  var els = { d: document.getElementById('cd-d'), h: document.getElementById('cd-h'), m: document.getElementById('cd-m'), s: document.getElementById('cd-s') };
+  var countEl = document.getElementById('count'), msgEl = document.getElementById('count-msg'), label = document.getElementById('cd-label');
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function tick() {
+    var now = Date.now(), diff = START - now;
+    if (diff <= 0) {
+      countEl.hidden = true; msgEl.hidden = false; label.hidden = true;
+      msgEl.textContent = now < END ? 'המסיבה התחילה! קופצים! 🚀' : 'תודה שבאתם לחגוג איתנו! 💜';
+      return;
+    }
+    var s = Math.floor(diff / 1000);
+    els.d.textContent = Math.floor(s / 86400);
+    els.h.textContent = pad(Math.floor(s % 86400 / 3600));
+    els.m.textContent = pad(Math.floor(s % 3600 / 60));
+    els.s.textContent = pad(s % 60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Stars background
+  var sc = document.getElementById('stars'), sx = sc.getContext('2d');
+  var stars = [], bits = [], W, H;
+  var colors = ['#2ee8ff', '#c8ff3a', '#ff3fae', '#ff7a1a'];
+  function seed(n) { var x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
+  function sizeCanvas(c, ctx) { var d = window.devicePixelRatio || 1; c.width = innerWidth * d; c.height = innerHeight * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+  function initStars() {
+    W = innerWidth; H = innerHeight; sizeCanvas(sc, sx);
+    stars = []; bits = [];
+    for (var i = 0; i < 110; i++) stars.push({ x: seed(i) * W, y: seed(i + 500) * H, r: seed(i + 900) * 1.4 + .3, p: seed(i + 1300) * 6.28 });
+    for (var j = 0; j < 12; j++) bits.push({
+      x: (j % 2 ? seed(j + 2000) * .1 : .9 + seed(j + 2000) * .1) * W, y: seed(j + 2100) * H, s: 8 + seed(j + 2200) * 8,
+      col: colors[j % 4], type: j % 3, rot: seed(j + 2300) * 6.28, v: (seed(j + 2400) - .5) * .01, dy: seed(j + 2500) * .25 + .1
+    });
+  }
+  function star5(ctx, x, y, r) { ctx.beginPath(); for (var k = 0; k < 10; k++) { var a = k * Math.PI / 5 - Math.PI / 2, rr = k % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); }
+  function drawStars(t) {
+    sx.clearRect(0, 0, W, H);
+    sx.fillStyle = '#ffffff';
+    stars.forEach(function (s) { sx.globalAlpha = .35 + .65 * Math.abs(Math.sin(t / 900 + s.p)); sx.beginPath(); sx.arc(s.x, s.y, s.r, 0, 6.28); sx.fill(); });
+    sx.globalAlpha = .45;
+    bits.forEach(function (b) {
+      if (!reduce) { b.rot += b.v; b.y -= b.dy; if (b.y < -30) b.y = H + 30; }
+      sx.save(); sx.translate(b.x, b.y); sx.rotate(b.rot);
+      sx.fillStyle = b.col; sx.strokeStyle = b.col; sx.lineWidth = b.s * .22; sx.lineCap = 'round';
+      if (b.type === 0) { star5(sx, 0, 0, b.s); sx.fill(); }
+      else if (b.type === 1) { sx.beginPath(); sx.arc(0, 0, b.s * .7, 0, 6.28); sx.stroke(); }
+      else { sx.beginPath(); sx.moveTo(-b.s, 0); sx.lineTo(-b.s / 3, -b.s * .5); sx.lineTo(b.s / 3, b.s * .5); sx.lineTo(b.s, 0); sx.stroke(); }
+      sx.restore();
+    });
+    sx.globalAlpha = 1;
+    if (!reduce) requestAnimationFrame(drawStars);
+  }
+  initStars(); requestAnimationFrame(drawStars);
+
+  // Confetti on tapping the 9
+  var cc = document.getElementById('confetti'), cx = cc.getContext('2d'), parts = [], running = false;
+  var confColors = ['#c8ff3a', '#2ee8ff', '#ff3fae', '#ff7a1a', '#ffffff'];
+  sizeCanvas(cc, cx);
+  window.addEventListener('resize', function () { initStars(); sizeCanvas(cc, cx); });
+  function burst(x, y) {
+    for (var i = 0; i < 120; i++) {
+      var a = Math.random() * Math.PI * 2, v = 4 + Math.random() * 9;
+      parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 6, s: 5 + Math.random() * 6, r: Math.random() * 6.28, vr: (Math.random() - .5) * .4, c: confColors[i % 5], life: 0 });
+    }
+    if (!running) { running = true; requestAnimationFrame(drawConfetti); }
+  }
+  function drawConfetti() {
+    cx.clearRect(0, 0, innerWidth, innerHeight);
+    parts = parts.filter(function (p) { return p.life < 160 && p.y < innerHeight + 40; });
+    parts.forEach(function (p) {
+      p.life++; p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore();
+    });
+    if (parts.length) requestAnimationFrame(drawConfetti); else { running = false; cx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  var nine = document.getElementById('nine');
+  nine.addEventListener('click', function () {
+    var r = nine.getBoundingClientRect();
+    if (!reduce) burst(r.left + r.width / 2, r.top + r.height / 2);
+    nine.classList.remove('boost'); void nine.offsetWidth; nine.classList.add('boost');
+  });
+  nine.addEventListener('animationend', function () { nine.classList.remove('boost'); });
+})();
+</script>
+</body></html>
