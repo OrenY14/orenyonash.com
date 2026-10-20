@@ -1,3 +1,4 @@
+/** @OnlyCurrentDoc */
 /**
  * Gravity Park jump contest — score server.
  * Bound to the "Gravity Jump Contest" Google Sheet (orenyonash@gmail.com).

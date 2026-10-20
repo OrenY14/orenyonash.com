@@ -1010,7 +1010,7 @@ const gameState = {
 // High score management functions
 function loadHighScore(): number {
   try {
-    const saved = localStorage.getItem(`gravity-best-${selectedKid ? selectedKid.id : "none"}`);
+    const saved = localStorage.getItem(`gravity-best-${player ? player.cls + "-" + player.name : "guest"}`);
     return saved ? parseInt(saved, 10) : 0;
   } catch (error) {
     console.warn("Could not load high score from localStorage:", error);
@@ -1020,7 +1020,7 @@ function loadHighScore(): number {
 
 function saveHighScore(score: number): void {
   try {
-    localStorage.setItem(`gravity-best-${selectedKid ? selectedKid.id : "none"}`, score.toString());
+    localStorage.setItem(`gravity-best-${player ? player.cls + "-" + player.name : "guest"}`, score.toString());
   } catch (error) {
     console.warn("Could not save high score to localStorage:", error);
   }
@@ -1453,9 +1453,11 @@ function checkPlatformCollision() {
 
 // Start the game with intro animation
 function startGame() {
-  if (gameState.gameStarted || !selectedKid) return;
+  if (gameState.gameStarted || !selectedKid || pickerOpen()) return;
+  gameStartedAt = Date.now();
 
   switchKidElement.style.display = "none";
+  boardBtnElement.style.display = "none";
   gameState.introAnimation.active = true;
   gameState.introAnimation.progress = 0;
   gameState.introAnimation.delayProgress = 0; // Reset delay progress
@@ -2138,7 +2140,6 @@ function updateGame() {
 
     // Reset game state
     gameState.gameStarted = false;
-    switchKidElement.style.display = "block";
     gameState.introAnimation.active = false;
     gameState.introAnimation.progress = 0;
     gameState.introAnimation.delayProgress = 0; // Reset delay progress
@@ -2153,6 +2154,7 @@ function updateGame() {
     gameState.player.spinProgress = 0;
     gameState.player.doubleJumpAvailable = false;
     gameState.player.hasDoubleJumped = false;
+    onGameOver(gameState.score);
     gameState.score = 0;
     gameState.world.offset = 0;
     gameState.world.targetOffset = 0;
@@ -2382,6 +2384,9 @@ async function unlockAudio() {
 );
 
 function selectKid(kid: Kid) {
+  // a focused button would be "clicked" again by the space key that starts the game
+  (document.activeElement as HTMLElement | null)?.blur();
+  if (gameState.gameStarted || gameState.introAnimation.active) return;
   unlockAudio();
   selectedKid = kid;
   const old = copilotModel;
@@ -2393,6 +2398,7 @@ function selectKid(kid: Kid) {
   highScoreElement.textContent = `שיא ${gameState.highScore}`;
   pickerElement.style.display = "none";
   switchKidElement.style.display = "block";
+  boardBtnElement.style.display = "block";
 }
 
 const pickerElement = document.createElement("div");
@@ -2431,9 +2437,275 @@ switchKidElement.addEventListener("click", () => {
   if (gameState.gameStarted) return;
   pickerElement.style.display = "flex";
   switchKidElement.style.display = "none";
+  boardBtnElement.style.display = "none";
 });
 document.body.appendChild(switchKidElement);
-function pickerOpen() { return pickerElement.style.display !== "none"; }
+function pickerOpen() {
+  return [pickerElement, whoElement, resultElement, boardElement].some((el) => el && el.style.display !== "none");
+}
+
+// ---- Class contest (ג1 vs ג2): who is playing, score saving, results, leaderboard ----
+const API = "https://script.google.com/macros/s/AKfycbyWyywWy6wMMf6kXPzsT3VSMEZZoat5Y1QRUxcmGLGIpfuu_vfPlAjOPaA6Dfne-Tih/exec";
+const DEFAULT_ROSTER: { name: string; cls: string }[] = [
+  ...["עידו", "גילי", "נועה", "איתי", "מאיה", "יונתן", "תמר", "אורי", "שירה", "דניאל", "עמית", "ליה"].map((n) => ({ name: n, cls: "ג1" })),
+  ...["רני", "עוז", "יואב", "אביגיל", "אלון", "הילה", "נדב", "ניצן", "איתמר", "טליה", "ארבל", "עומר"].map((n) => ({ name: n, cls: "ג2" })),
+];
+const CLASSES = ["ג1", "ג2"];
+type Player = { name: string; cls: string };
+type BoardPlayer = { name: string; cls: string; best: number; total: number; games: number };
+type Board = {
+  ok: boolean; deadline: string; closed: boolean; classMetric: "best" | "total";
+  players: BoardPlayer[]; roster: Player[];
+  classes: { [cls: string]: { sumBest: number; sumTotal: number; players: number; record: { name: string; best: number } | null } };
+};
+
+function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+function esc(t: string) { return String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)); }
+
+let player: Player | null = null;
+try { player = JSON.parse(lsGet("gp-player") || "null"); } catch (e) { player = null; }
+let deviceId = lsGet("gp-device");
+if (!deviceId) { deviceId = Math.random().toString(36).slice(2) + Date.now().toString(36); lsSet("gp-device", deviceId); }
+let board: Board | null = null;
+let gameStartedAt = Date.now();
+let lastResult: { score: number; prevBest: number; saving: boolean; error: string } | null = null;
+
+function rosterList(): Player[] { return board && board.roster && board.roster.length ? board.roster : DEFAULT_ROSTER; }
+function me(): BoardPlayer | null {
+  if (!board || !player) return null;
+  return board.players.find((p) => p.name === player!.name && p.cls === player!.cls) || null;
+}
+function classValue(cls: string) {
+  const c = board && board.classes[cls];
+  if (!c) return 0;
+  return board!.classMetric === "total" ? c.sumTotal : c.sumBest;
+}
+
+async function fetchBoard() {
+  if (API.indexOf("__") === 0) return;
+  try {
+    const r = await fetch(`${API}?t=${Date.now()}`);
+    const b = await r.json();
+    if (b && b.ok) { board = b; onBoardUpdate(); }
+  } catch (e) { /* offline: keep the last board */ }
+}
+
+function queue(): any[] { try { return JSON.parse(lsGet("gp-queue") || "[]"); } catch (e) { return []; } }
+function setQueue(q: any[]) { lsSet("gp-queue", JSON.stringify(q)); }
+async function flushQueue() {
+  if (API.indexOf("__") === 0) return "";
+  let q = queue(), error = "";
+  while (q.length) {
+    try {
+      const r = await fetch(API, { method: "POST", body: JSON.stringify(q[0]) });
+      const res = await r.json();
+      if (res.board) { board = res.board; }
+      if (!res.ok) error = res.error || "error";
+      q.shift();  // saved, or rejected for good (closed / unknown / implausible): don't retry
+      setQueue(q);
+    } catch (e) {
+      return "offline";
+    }
+  }
+  onBoardUpdate();
+  return error;
+}
+
+function onGameOver(score: number) {
+  const secs = (Date.now() - gameStartedAt) / 1000;
+  const prev = me();
+  lastResult = { score, prevBest: prev ? prev.best : 0, saving: !!player && score > 0, error: "" };
+  showResult();
+  if (!player || score <= 0) return;
+  const q = queue();
+  q.push({ name: player.name, cls: player.cls, score, secs, device: deviceId, gameId: Math.random().toString(36).slice(2) + Date.now().toString(36) });
+  setQueue(q);
+  flushQueue().then((err) => {
+    if (lastResult) { lastResult.saving = false; lastResult.error = err; }
+    renderResult();
+  });
+}
+
+// ---------- shared overlay helpers ----------
+function overlay(cls: string) {
+  const el = document.createElement("div");
+  el.className = `gp-overlay ${cls}`;
+  el.style.display = "none";
+  document.body.appendChild(el);
+  return el;
+}
+function show(el: HTMLElement) { el.style.display = "flex"; switchKidElement.style.display = "none"; boardBtnElement.style.display = "none"; }
+function hide(el: HTMLElement) {
+  el.style.display = "none";
+  if (!pickerOpen() && !gameState.gameStarted && selectedKid) { switchKidElement.style.display = "block"; boardBtnElement.style.display = "block"; }
+}
+function battleHtml() {
+  const a = classValue("ג1"), b = classValue("ג2"), sum = a + b;
+  const pa = sum ? Math.round((a / sum) * 100) : 50;
+  const label = board && board.classMetric === "total" ? "ניקוד מצטבר של הכיתה" : "סכום השיאים של הכיתה";
+  return `<div class="battle"><div class="battle-head"><span>ג1 <b>${a}</b></span><span class="vs">נגד</span><span><b>${b}</b> ג2</span></div>
+    <div class="battle-bar"><i style="width:${pa}%"></i></div><small>${label}</small></div>`;
+}
+
+// ---------- who is playing ----------
+const whoElement = overlay("who-picker");
+let whoClass = player ? player.cls : "ג1";
+function renderWho() {
+  const names = rosterList().filter((p) => p.cls === whoClass);
+  whoElement.innerHTML = `<h1>מי <em>משחק?</em></h1>
+    <p>בחרו כיתה ושם, וכל קפיצה שלכם תיכנס לתחרות של הכיתה</p>
+    <div class="tabs">${CLASSES.map((c) => `<button type="button" data-cls="${c}" class="${c === whoClass ? "on" : ""}">${c}</button>`).join("")}</div>
+    <div class="names">${names.map((p) => `<button type="button" data-name="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>
+    <button type="button" class="link guest">לשחק בלי להשתתף בתחרות</button>`;
+}
+whoElement.addEventListener("click", (e) => {
+  (document.activeElement as HTMLElement | null)?.blur();
+  const t = (e.target as HTMLElement).closest("button") as HTMLButtonElement | null;
+  if (!t) return;
+  if (t.dataset.cls) { whoClass = t.dataset.cls; renderWho(); return; }
+  if (t.dataset.name) {
+    player = { name: t.dataset.name, cls: whoClass };
+    lsSet("gp-player", JSON.stringify(player));
+  } else if (t.classList.contains("guest")) {
+    player = null;
+    lsSet("gp-player", "null");
+  } else return;
+  hide(whoElement);
+  renderHello();
+  gameState.highScore = loadHighScore();
+  highScoreElement.textContent = `שיא ${gameState.highScore}`;
+  if (!selectedKid) pickerElement.style.display = "flex";
+});
+
+// greeting line inside the jumper picker
+const helloElement = document.createElement("div");
+helloElement.className = "hello";
+pickerElement.insertBefore(helloElement, pickerElement.firstChild);
+function renderHello() {
+  helloElement.innerHTML = player
+    ? `שלום <b>${esc(player.name)}</b> · ${esc(player.cls)} <button type="button" class="link">לא ${esc(player.name)}?</button>`
+    : `משחקים כאורחים <button type="button" class="link">להצטרף לתחרות</button>`;
+}
+helloElement.addEventListener("click", (e) => {
+  if (!(e.target as HTMLElement).closest("button")) return;
+  renderWho();
+  show(whoElement);
+});
+
+// ---------- result after each game ----------
+const resultElement = overlay("result-panel");
+function showResult() { renderResult(); show(resultElement); }
+function renderResult() {
+  if (!lastResult) return;
+  const r = lastResult, m = me();
+  const best = Math.max(m ? m.best : 0, r.score), total = m ? m.total : r.score;
+  const newBest = !!player && r.score > r.prevBest && r.score > 0;
+  let rank = 0;
+  if (board && player) {
+    const mates = board.players.filter((p) => p.cls === player!.cls).sort((a, b) => b.best - a.best);
+    rank = mates.findIndex((p) => p.name === player!.name) + 1;
+  }
+  const rec = player && board && board.classes[player.cls] ? board.classes[player.cls].record : null;
+  let nudge = "";
+  if (board && board.closed) nudge = "התחרות הסתיימה. נתראה במסיבה! 🎉";
+  else if (!player) nudge = "רוצים שהקפיצות ייכנסו לתחרות של הכיתה? בחרו שם 👇";
+  else if (rec && rec.name === player.name) nudge = `👑 השיא של ${esc(player.cls)} בידיים שלך! תשמרו עליו עד יום המסיבה`;
+  else if (rec) nudge = `עוד <b>${rec.best - best + 1}</b> נקודות ושוברים את השיא של ${esc(player.cls)} (${esc(rec.name)}: ${rec.best})`;
+  else nudge = `עוד אין שיא ב-${esc(player.cls)}. זה הזמן לקבוע אחד!`;
+  const why = player && board && !board.closed
+    ? (board.classMetric === "total" ? `כל משחק מוסיף ל${esc(player.cls)} נקודות` : `כל שיא אישי מוסיף ל${esc(player.cls)} נקודות`)
+    : "";
+  const status = r.saving ? "שומרים את הניקוד…" : r.error === "offline" ? "אין חיבור. הניקוד יישמר בפעם הבאה." : r.error && r.error !== "closed" ? "הניקוד לא נשמר." : "";
+  resultElement.innerHTML = `<h1>קפצת <em>${r.score}</em>!</h1>
+    ${newBest ? `<span class="badge">שיא אישי חדש! 🎉</span>` : ""}
+    ${player ? `<div class="stats">
+      <div><b>${best}</b><span>השיא שלך</span></div>
+      <div><b>${total}</b><span>מצטבר${r.score > 0 ? ` (+${r.score})` : ""}</span></div>
+      <div><b>${rank ? "#" + rank : "-"}</b><span>מקום ב${esc(player.cls)}</span></div>
+    </div>` : ""}
+    <p class="nudge">${nudge}</p>
+    ${why ? `<p class="why">${why}</p>` : ""}
+    ${board ? battleHtml() : ""}
+    ${status ? `<p class="status">${status}</p>` : ""}
+    <div class="row">
+      <button type="button" class="primary again">עוד משחק!</button>
+      ${player ? `<button type="button" class="ghost show-board">🏆 טבלה</button>` : `<button type="button" class="ghost join">להצטרף לתחרות</button>`}
+      <button type="button" class="ghost switch">החלפת קופץ</button>
+    </div>`;
+}
+resultElement.addEventListener("click", (e) => {
+  (document.activeElement as HTMLElement | null)?.blur();
+  const t = (e.target as HTMLElement).closest("button");
+  if (!t) return;
+  if (t.classList.contains("again")) { hide(resultElement); startGame(); }
+  else if (t.classList.contains("show-board")) { hide(resultElement); openBoard(); }
+  else if (t.classList.contains("join")) { hide(resultElement); renderWho(); show(whoElement); }
+  else if (t.classList.contains("switch")) { hide(resultElement); pickerElement.style.display = "flex"; switchKidElement.style.display = "none"; boardBtnElement.style.display = "none"; }
+});
+
+// ---------- leaderboard ----------
+const boardElement = overlay("board-panel");
+let boardTab: "best" | "total" = "best";
+let boardClass = player ? player.cls : "ג1";
+function openBoard() { renderBoard(); show(boardElement); fetchBoard(); }
+function renderBoard() {
+  const left = board ? new Date(board.deadline).getTime() - Date.now() : 0;
+  const days = Math.max(0, Math.floor(left / 86400000)), hours = Math.max(0, Math.floor((left % 86400000) / 3600000));
+  const rows = board ? board.players.filter((p) => p.cls === boardClass).sort((a, b) => b[boardTab] - a[boardTab]).slice(0, 10) : [];
+  boardElement.innerHTML = `<h1>🏆 טבלת <em>השיאים</em></h1>
+    <p class="sub">${!board ? "טוענים…" : board.closed ? "התחרות הסתיימה" : `התחרות נגמרת כשהמסיבה מתחילה: עוד ${days} ימים ו-${hours} שעות`}</p>
+    ${board ? battleHtml() : ""}
+    <div class="tabs">${CLASSES.map((c) => `<button type="button" data-cls="${c}" class="${c === boardClass ? "on" : ""}">${c}</button>`).join("")}</div>
+    <div class="tabs small">
+      <button type="button" data-tab="best" class="${boardTab === "best" ? "on" : ""}">שיא במשחק אחד</button>
+      <button type="button" data-tab="total" class="${boardTab === "total" ? "on" : ""}">ניקוד מצטבר</button>
+    </div>
+    <ol class="ranks">${rows.length ? rows.map((p, i) => `<li class="${player && p.name === player.name && p.cls === player.cls ? "me" : ""}"><span class="n">${i + 1}</span><span class="nm">${esc(p.name)}</span><b>${p[boardTab]}</b></li>`).join("") : `<li class="empty">עוד אף אחד מ${esc(boardClass)} לא שיחק. תהיו הראשונים!</li>`}</ol>
+    <p class="privacy">בטבלה מוצגים שם פרטי וכיתה בלבד</p>
+    <div class="row"><button type="button" class="primary close">לשחק!</button></div>`;
+}
+boardElement.addEventListener("click", (e) => {
+  (document.activeElement as HTMLElement | null)?.blur();
+  const t = (e.target as HTMLElement).closest("button") as HTMLButtonElement | null;
+  if (!t) return;
+  if (t.dataset.cls) { boardClass = t.dataset.cls; renderBoard(); }
+  else if (t.dataset.tab) { boardTab = t.dataset.tab as "best" | "total"; renderBoard(); }
+  else if (t.classList.contains("close")) {
+    hide(boardElement);
+    if (!selectedKid) pickerElement.style.display = "flex";
+  }
+});
+
+const boardBtnElement = document.createElement("button");
+boardBtnElement.type = "button";
+boardBtnElement.className = "board-btn";
+boardBtnElement.textContent = "🏆 טבלת השיאים";
+boardBtnElement.style.display = "none";
+boardBtnElement.addEventListener("click", () => { if (!gameState.gameStarted) openBoard(); });
+document.body.appendChild(boardBtnElement);
+
+const pickerBoardBtn = document.createElement("button");
+pickerBoardBtn.type = "button";
+pickerBoardBtn.className = "link picker-board";
+pickerBoardBtn.textContent = "🏆 טבלת השיאים";
+pickerBoardBtn.addEventListener("click", () => { pickerElement.style.display = "none"; openBoard(); });
+pickerElement.insertBefore(pickerBoardBtn, pickerElement.querySelector(".back"));
+
+function onBoardUpdate() {
+  const m = me();
+  if (m && m.best > gameState.highScore) { gameState.highScore = m.best; highScoreElement.textContent = `שיא ${gameState.highScore}`; }
+  if (resultElement.style.display !== "none") renderResult();
+  if (boardElement.style.display !== "none") renderBoard();
+  if (whoElement.style.display !== "none") renderWho();
+}
+
+// first screen: who is playing (once per device), then pick a jumper
+renderHello();
+if (lsGet("gp-player") === null) { pickerElement.style.display = "none"; renderWho(); show(whoElement); }
+if (location.hash === "#board") { pickerElement.style.display = "none"; openBoard(); }
+fetchBoard().then(() => flushQueue());
+setInterval(() => { if (!gameState.gameStarted) fetchBoard(); }, 60000);
 
 // Add UI for score display
 const scoreElement = document.createElement("div");
@@ -2702,7 +2974,7 @@ let hasMoved = false; // Track if finger has moved significantly
 
 // Touch control handlers
 function handleTouchStart(event: TouchEvent) {
-  if (pickerOpen() || (event.target as HTMLElement).closest?.(".switch-kid, a")) return;
+  if (pickerOpen() || (event.target as HTMLElement).closest?.("button, a")) return;
   event.preventDefault();
   if (event.touches.length > 0) {
     const touch = event.touches[0];
@@ -2786,7 +3058,7 @@ function handleTouchMove(event: TouchEvent) {
 }
 
 function handleTouchEnd(event: TouchEvent) {
-  if (pickerOpen() || (event.target as HTMLElement).closest?.(".switch-kid, a")) return;
+  if (pickerOpen() || (event.target as HTMLElement).closest?.("button, a")) return;
   event.preventDefault();
   
   // Check for tap (quick touch without much movement) for jump/double jump
