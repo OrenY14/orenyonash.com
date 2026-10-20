@@ -2362,7 +2362,27 @@ function buildFaceCoin(kid: Kid): THREE.Group {
   return group;
 }
 
+// Phones only allow audio after a real tap (click / touchend / keydown), not touchstart.
+// The game starts on touchstart, so unlock audio here and on the first tap anywhere.
+async function unlockAudio() {
+  if (!isAudioInitialized) await initializeAudio();
+  if (!audioContext) return;
+  if (audioContext.state !== "running") {
+    try { await audioContext.resume(); } catch (e) { /* ignore */ }
+  }
+  // playing a silent buffer inside the gesture is what iOS Safari needs
+  const src = audioContext.createBufferSource();
+  src.buffer = audioContext.createBuffer(1, 1, 22050);
+  src.connect(audioContext.destination);
+  src.start(0);
+  if (!musicBuffer) await loadBackgroundMusic();
+}
+["click", "touchend", "keydown"].forEach((type) =>
+  window.addEventListener(type, () => { if (!audioContext || audioContext.state !== "running") unlockAudio(); }, { capture: true, passive: true })
+);
+
 function selectKid(kid: Kid) {
+  unlockAudio();
   selectedKid = kid;
   const old = copilotModel;
   copilotModel = buildFaceCoin(kid);
@@ -2377,7 +2397,7 @@ function selectKid(kid: Kid) {
 
 const pickerElement = document.createElement("div");
 pickerElement.className = "kid-picker";
-pickerElement.innerHTML = `<h1>מי קופץ <em>הכי גבוה?</em></h1><p>בחרו קופץ</p><div class="kids"></div><a class="back" href="../invite.html">→ חזרה להזמנה</a>`;
+pickerElement.innerHTML = `<h1>בחרו <em>עם מי לקפוץ</em></h1><p>הפרצוף שתבחרו יקפוץ איתכם על הטרמפולינות</p><div class="kids"></div><a class="back" href="../invite.html">→ חזרה להזמנה</a>`;
 const kidsGrid = pickerElement.querySelector(".kids") as HTMLDivElement;
 const kidCanvases: { [id: string]: HTMLCanvasElement } = {};
 KIDS.forEach((kid) => {
