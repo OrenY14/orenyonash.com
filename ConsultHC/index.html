@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Oren Yonash, operations and management consultant to hospitals and health systems.">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Oren Yonash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: dark;
+  --void:#06080C;
+  --graphite:#12161D;
+  --deep:#0B1730;
+  --ink:#E9EDF3;
+  --ink-2:#B4BCC9;
+  --ink-3:#7D8796;
+  --line:rgba(255,255,255,.075);
+  --line-2:rgba(255,255,255,.14);
+  --flow:#A9C1FF;
+  --flow-dim:rgba(169,193,255,.14);
+  --amber:#D9B37A;
+  --focus:#BFD0FF;
+  --sans:"Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --gut:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--void);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--void);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+::selection{background:rgba(169,193,255,.28);color:#fff}
+a{color:inherit}
+:focus-visible{outline:1px solid var(--focus);outline-offset:4px;border-radius:2px}
+
+/* ---------- ambient background ---------- */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--void)}
+.ambient .glow{position:absolute;border-radius:50%;filter:blur(40px);will-change:transform}
+.ambient .g1{width:110vmax;height:80vmax;left:-30vmax;top:-45vmax;
+  background:radial-gradient(closest-side, rgba(28,52,110,.55), rgba(11,23,48,.25) 55%, transparent 75%);
+  animation:drift1 48s var(--ease) infinite alternate}
+.ambient .g2{width:90vmax;height:70vmax;right:-35vmax;top:20vh;
+  background:radial-gradient(closest-side, rgba(40,46,58,.55), rgba(18,22,29,.25) 55%, transparent 75%);
+  animation:drift2 62s var(--ease) infinite alternate}
+.ambient .grid{position:absolute;inset:0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:80px 80px;background-position:-1px -1px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 20%, #000 20%, transparent 80%);
+          mask-image:radial-gradient(ellipse 80% 60% at 50% 20%, #000 20%, transparent 80%)}
+@keyframes drift1{from{transform:translate3d(0,0,0)}to{transform:translate3d(14vmax,8vmax,0)}}
+@keyframes drift2{from{transform:translate3d(0,0,0)}to{transform:translate3d(-12vmax,-10vmax,0)}}
+.paused .ambient .glow{animation-play-state:paused}
+
+.page{position:relative;z-index:1}
+.wrap{max-width:1240px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+@media (min-width:760px){.wrap{padding-left:max(40px, env(safe-area-inset-left,0px));padding-right:max(40px, env(safe-area-inset-right,0px))}}
+
+/* ---------- nav ---------- */
+.nav{display:flex;justify-content:space-between;align-items:center;height:72px;border-bottom:1px solid var(--line)}
+.nav .mark{font-weight:500;letter-spacing:-.01em;text-decoration:none;font-size:15px}
+.nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
+.nav ul a{font-size:14px;color:var(--ink-2);text-decoration:none;transition:color .3s var(--ease)}
+.nav ul a:hover{color:var(--ink)}
+@media (max-width:640px){.nav ul li:not(:last-child){display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(48px,6vw,72px) 0 0}
+.hero h1{
+  margin:0;font-weight:500;font-size:clamp(58px,10vw,136px);line-height:.9;letter-spacing:-.052em;
+  color:var(--ink);
+  background:linear-gradient(180deg,#F4F6FA 30%,#9BA6B8 120%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-meta{display:grid;gap:28px;margin-top:clamp(24px,3vw,36px)}
+.hero .role{margin:0;font-size:clamp(19px,2vw,24px);line-height:1.35;font-weight:400;letter-spacing:-.012em;color:var(--ink);max-width:28ch}
+@media (min-width:900px){.hero .role{max-width:22ch}}
+.hero .lede{margin:0;color:var(--ink-2);max-width:60ch;font-size:17px}
+@media (min-width:900px){
+  .hero-meta{grid-template-columns:5fr 7fr;gap:64px;align-items:end}
+  .hero .lede{justify-self:end}
+}
+
+/* ---------- flow diagram ---------- */
+.flow{position:relative;margin-top:clamp(40px,4.5vw,56px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.flow:focus-visible{outline-offset:-1px}
+.flow-stage{position:relative;height:clamp(240px,22vw,330px)}
+.flow canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.units{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+.unit{position:absolute;top:0;bottom:0;transform:translateX(-50%);width:64px;pointer-events:auto}
+.unit span{
+  position:absolute;left:50%;bottom:14px;transform:translate(-50%,4px);white-space:nowrap;
+  font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--ink-2);
+  opacity:0;transition:opacity .6s var(--ease),transform .6s var(--ease),color .4s var(--ease);
+}
+.unit.is-constraint span{opacity:1;transform:translate(-50%,0);color:var(--amber);transition:opacity .6s var(--ease),transform .6s var(--ease),color 1.6s var(--ease)}
+.flow.eased .unit.is-constraint span{color:var(--ink-2)}
+.flow:hover .unit span,.flow:focus-visible .unit span,.flow.still .unit span{opacity:1;transform:translate(-50%,0)}
+.flow .unit:hover span{color:var(--ink)}
+@media (hover:none){.unit span{opacity:.75;transform:translate(-50%,0)}}
+@media (max-width:520px){.unit span{font-size:10px;letter-spacing:0}}
+.flow-cap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.flow-cap .state{color:var(--ink-2);transition:opacity .5s var(--ease)}
+.flow-cap .state i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-right:10px;vertical-align:1px;transition:background 1.6s var(--ease)}
+.flow.eased .flow-cap .state i{background:var(--flow)}
+
+/* ---------- figures ---------- */
+.figures{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--line)}
+.fig{padding:36px 20px 34px 0;border-right:1px solid var(--line)}
+.fig:nth-child(2n){border-right:0;padding-left:20px}
+.fig:nth-child(-n+2){border-bottom:1px solid var(--line)}
+.fig .n{display:block;font-weight:200;font-size:clamp(56px,7.4vw,104px);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.fig p{margin:14px 0 0;font-size:14px;line-height:1.45;color:var(--ink-2);max-width:26ch}
+@media (min-width:900px){
+  .figures{grid-template-columns:repeat(4,1fr)}
+  .fig,.fig:nth-child(2n){padding:48px 28px 44px;border-right:1px solid var(--line);border-bottom:0}
+  .fig:first-child{padding-left:0}
+  .fig:last-child{border-right:0}
+}
+
+/* ---------- sections ---------- */
+section.block{padding:clamp(80px,11vw,152px) 0 0}
+.split{display:grid;gap:28px}
+@media (min-width:900px){.split{grid-template-columns:4fr 8fr;gap:64px}}
+h2{margin:0;font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.02;letter-spacing:-.035em;color:var(--ink);max-width:12ch}
+.intro{margin:0 0 40px;font-size:clamp(19px,1.8vw,22px);line-height:1.45;letter-spacing:-.01em;color:var(--ink);max-width:40ch}
+p{max-width:64ch}
+
+.expertise{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.expertise li{display:flex;gap:20px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line);font-size:clamp(18px,1.7vw,21px);letter-spacing:-.01em}
+.expertise li::before{content:"";flex:none;width:18px;height:1px;background:var(--line-2);transform:translateY(-6px)}
+
+/* ---------- steps ---------- */
+.steps{position:relative;padding:0 0 0 44px;--p:0}
+.steplist{list-style:none;margin:0;padding:0}
+.steps .track,.steps .fill{position:absolute;left:5px;top:10px;width:1px}
+.steps .track{bottom:10px;background:var(--line-2)}
+.steps .fill{height:calc((100% - 20px) * var(--p));background:linear-gradient(to bottom, rgba(169,193,255,0), rgba(169,193,255,.55) 70%, #DCE6FF)}
+.steps .fill::after{content:"";position:absolute;left:50%;bottom:-40px;width:80px;height:80px;transform:translateX(-50%);
+  background:radial-gradient(closest-side, rgba(190,210,255,.35), rgba(169,193,255,.08) 55%, transparent);pointer-events:none}
+.step{position:relative;padding:0 0 44px}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:-44px;top:7px;width:11px;height:11px;border-radius:50%;
+  background:var(--void);border:1px solid var(--line-2);transition:border-color .6s var(--ease),background .6s var(--ease),box-shadow .6s var(--ease)}
+.step.lit::before{border-color:var(--flow);background:#1A2440;box-shadow:0 0 0 4px rgba(169,193,255,.07)}
+.step .num{font-family:var(--mono);font-size:12px;color:var(--ink-3);display:block;margin-bottom:6px;transition:color .6s var(--ease)}
+.step.lit .num{color:var(--flow)}
+.step h3{margin:0;font-size:clamp(20px,2vw,25px);font-weight:500;letter-spacing:-.02em;line-height:1.25;color:var(--ink-2);transition:color .6s var(--ease)}
+.step.lit h3{color:var(--ink)}
+.step p{margin:8px 0 0;color:var(--ink-2);font-size:16px}
+
+/* ---------- cards ---------- */
+.lit-card{position:relative;isolation:isolate;--mx:50%;--my:50%}
+.lit-card::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;opacity:0;transition:opacity .5s var(--ease);
+  background:radial-gradient(360px circle at var(--mx) var(--my), rgba(150,178,255,.085), transparent 65%)}
+.lit-card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;opacity:0;transition:opacity .5s var(--ease);pointer-events:none;
+  background:radial-gradient(260px circle at var(--mx) var(--my), rgba(190,208,255,.5), transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+          mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.lit-card:hover::before,.lit-card:hover::after{opacity:1}
+
+.gets{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gets .lit-card{background:var(--void);padding:30px 28px 32px;display:flex;align-items:flex-end;min-height:132px}
+.gets .lit-card::after{display:none}
+.gets p{margin:0;font-size:18px;line-height:1.45;letter-spacing:-.008em;color:var(--ink)}
+@media (min-width:760px){
+  .gets{grid-template-columns:repeat(6,1fr)}
+  .gets .lit-card:nth-child(-n+2){grid-column:span 3}
+  .gets .lit-card:nth-child(n+3){grid-column:span 2}
+}
+
+.cases{display:grid;grid-template-columns:1fr;gap:16px}
+.case{border:1px solid var(--line);border-radius:14px;padding:30px 28px 32px;background:linear-gradient(180deg, rgba(18,22,29,.55), rgba(6,8,12,.35))}
+.case h3{margin:0 0 12px;font-size:20px;font-weight:500;letter-spacing:-.018em;line-height:1.25}
+.case p{margin:0;color:var(--ink-2);font-size:16px}
+@media (min-width:760px){.cases{grid-template-columns:repeat(2,1fr)}.case.wide{grid-column:span 2}}
+@media (min-width:1100px){.cases{grid-template-columns:repeat(3,1fr)}.case.wide{grid-column:span 2}.case.wide h3{font-size:26px}.case.wide p{font-size:17px;max-width:56ch}}
+
+.prose p{margin:0 0 18px;color:var(--ink-2)}
+.prose p:first-child{color:var(--ink);font-size:clamp(19px,1.8vw,22px);line-height:1.45;letter-spacing:-.01em;max-width:44ch}
+.duo{display:grid;gap:56px}
+@media (min-width:900px){.duo{grid-template-columns:1fr 1fr;gap:64px}}
+.duo h2{margin-bottom:28px}
+
+/* ---------- contact ---------- */
+.contact{margin-top:clamp(96px,12vw,168px);border-top:1px solid var(--line);padding:clamp(56px,7vw,96px) 0 0}
+.contact h2{max-width:none}
+.contact .note{margin:18px 0 0;color:var(--ink-2);max-width:38ch}
+.lines{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.lines li{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 20px;padding:22px 0;border-bottom:1px solid var(--line)}
+.lines .lab{grid-column:1 / -1;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.lines .v{font-weight:300;font-size:clamp(24px,3.6vw,44px);letter-spacing:-.03em;line-height:1.1;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere;min-width:0}
+.copy{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:transparent;border:1px solid var(--line-2);border-radius:999px;padding:8px 14px;cursor:pointer;
+  transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease);white-space:nowrap}
+.copy:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+.copy.done{color:var(--void);background:var(--flow);border-color:var(--flow)}
+@media (min-width:900px){.lines li{grid-template-columns:120px 1fr auto}.lines .lab{grid-column:auto}}
+
+footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .ambient .glow{animation:none}
+  *,*::before,*::after{transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true"><div class="glow g1"></div><div class="glow g2"></div><div class="grid"></div></div>
+
+<div class="page">
+<div class="wrap">
+  <nav class="nav" aria-label="Main">
+    <a class="mark" href="#top">Oren Yonash</a>
+    <ul>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <h1>Oren Yonash</h1>
+    <div class="hero-meta">
+      <p class="role">Operations and management consultant to hospitals and health systems</p>
+      <p class="lede">Oren helps hospital leaders get more from the capacity they already have: shorter waits, better flow and more patients treated with the same staff, beds and budget. He was the leading consultant at Focused Management, Prof. Boaz Ronen's consulting firm, and has trained Israeli doctors and hospital managers at Tel Aviv University for 11 years. He also builds AI products himself, so his work joins process and technology.</p>
+    </div>
+  </header>
+
+  <figure class="flow" id="flow" tabindex="0" aria-labelledby="flowcap" style="margin-left:0;margin-right:0;margin-bottom:0">
+    <div class="flow-stage">
+      <canvas id="flowCanvas" aria-hidden="true"></canvas>
+      <ul class="units" id="units" aria-hidden="true"></ul>
+    </div>
+    <figcaption class="flow-cap" id="flowcap">
+      <span class="state" id="flowState"><i aria-hidden="true"></i><span id="flowStateText">Flow narrows at the constraint</span></span>
+      <span>Illustration: patient flow through six hospital units</span>
+    </figcaption>
+  </figure>
+
+  <div class="figures" id="figures">
+    <div class="fig"><span class="n" data-to="11">11</span><p>years training doctors and hospital managers at Tel Aviv University</p></div>
+    <div class="fig"><span class="n" data-to="3">3</span><p>hospitals as Focused Management's leading consultant</p></div>
+    <div class="fig"><span class="n" data-to="4">4</span><p>health funds on the national cancer patient journey</p></div>
+    <div class="fig"><span class="n" data-to="8">8</span><p>improvement teams in one operating-room system</p></div>
+  </div>
+
+  <section class="block" aria-labelledby="h-exp-areas">
+    <div class="split">
+      <h2 id="h-exp-areas">Expertise</h2>
+      <ul class="expertise">
+        <li>Theory of Constraints and Focused Management</li>
+        <li>Lean and patient flow</li>
+        <li>OKRs and performance measurement</li>
+        <li>Agile improvement cycles</li>
+        <li>Process redesign with AI and digital tools</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="approach" aria-labelledby="h-steps">
+    <div class="split">
+      <h2 id="h-steps">How an engagement works</h2>
+      <div>
+        <p class="intro">Change is led by the organisation's own people, with the CEO behind it.</p>
+        <div class="steps" id="steps">
+          <span class="track" aria-hidden="true"></span><span class="fill" aria-hidden="true"></span>
+          <ol class="steplist">
+          <li class="step"><span class="num">01</span><h3>The CEO owns the process</h3><p>and is the go-to person for decisions, which is what overcomes resistance to change.</p></li>
+          <li class="step"><span class="num">02</span><h3>A champion, appointed by the CEO</h3><p>keeps every project team moving, and removes most work from the CEO.</p></li>
+          <li class="step"><span class="num">03</span><h3>Interviews first</h3><p>Oren interviews the teams and learns the processes before anything is proposed.</p></li>
+          <li class="step"><span class="num">04</span><h3>A one or two day management workshop</h3><p>gives leaders the language and logic, and they choose the projects, for example the ICU, the ER, the operating rooms or the delivery room.</p></li>
+          <li class="step"><span class="num">05</span><h3>A two or three day staff workshop</h3><p>in which each project team defines its project, gets trained on the required skills, and starts work. Teams include everyone who touches the process: the head of department, doctors, nurses, the secretary, even cleaning staff.</p></li>
+          <li class="step"><span class="num">06</span><h3>Hands-on support for weeks</h3><p>working with the teams on implementation.</p></li>
+          <li class="step"><span class="num">07</span><h3>Every team sets a goal, measures it and reports to the CEO</h3></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-gets">
+    <div class="split">
+      <h2 id="h-gets">What your hospital gets</h2>
+      <div class="gets">
+        <div class="lit-card"><p>A management team that speaks one language of flow, constraints and focus.</p></div>
+        <div class="lit-card"><p>Several improvement projects running at once, each with its own team.</p></div>
+        <div class="lit-card"><p>Visible value within weeks, while the deeper root causes are worked through over the engagement.</p></div>
+        <div class="lit-card"><p>Goals and results measured with OKRs and reported to the CEO.</p></div>
+        <div class="lit-card"><p>Excellence that continues after Oren leaves: trained teams keep the knowledge and run further improvements on their own.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="experience" aria-labelledby="h-exp">
+    <h2 id="h-exp" style="margin-bottom:40px">Selected experience</h2>
+    <div class="cases">
+      <article class="case lit-card wide"><h3>Three hospitals</h3><p>As Focused Management's leading consultant: emergency rooms, operating rooms, hemato-oncology, MRI, X-ray and more. This included the operating-room system of a leading academic medical centre across two campuses, with a CEO-level steering committee and eight improvement teams.</p></article>
+      <article class="case lit-card"><h3>The national cancer patient journey</h3><p>With the Ministry of Health, Rambam Hospital and all four health funds.</p></article>
+      <article class="case lit-card"><h3>One of Israel's largest banks</h3><p>Technology budgeting, commercial credit approval times and dealing-room productivity.</p></article>
+      <article class="case lit-card"><h3>Government companies</h3><p>The senior managers' programme run with the Government Companies Authority.</p></article>
+      <article class="case lit-card"><h3>Hundreds of improvement projects</h3><p>With students during university classes, across hospitals, health funds, and the security and private sectors as well.</p></article>
+    </div>
+  </section>
+
+  <section class="block" aria-label="Teaching and background">
+    <div class="duo">
+      <div class="prose">
+        <h2 id="h-teach">Teaching</h2>
+        <p>For about 15 years Oren has taught at Tel Aviv University, assisting and co-teaching <em>Value Creation of Complex Healthcare Systems</em> with Prof. Boaz Ronen.</p>
+        <p>Each cohort of doctors, hospital managers and department heads runs a real improvement project in its own department.</p>
+      </div>
+      <div class="prose">
+        <h2 id="h-bg">Background</h2>
+        <p>Founder of Klarecon Ltd, which at its peak managed more than 300 employees worldwide.</p>
+        <p>Today Klarecon is a small team building management tools using best practices from management and built using AI systems, including OBOT, an AI consultant that solves managers' day-to-day flow and focus problems, with healthcare as one of its specialties.</p>
+        <p>Oren heads his city's police emergency defence unit, overseeing about 70 people. He dances, loves chess and is a father of two.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="h-contact">
+    <div class="split">
+      <div>
+        <h2 id="h-contact">Contact</h2>
+        <p class="note">To talk about flow in your hospital, write or call Oren directly.</p>
+      </div>
+      <div>
+        <ul class="lines">
+          <li><span class="lab">Email</span><span class="v" id="email">OrenYonash@gmail.com</span><button class="copy" type="button" data-copy="email" aria-label="Copy email address">Copy</button></li>
+          <li><span class="lab">Phone</span><span class="v" id="phone">052-865-1414</span><button class="copy" type="button" data-copy="phone" aria-label="Copy phone number">Copy</button></li>
+        </ul>
+        <p class="sr" id="copyStatus" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer><span>Oren Yonash</span><span>Hospitals and health systems</span></footer>
+</div>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  document.addEventListener('visibilitychange', function(){
+    root.classList.toggle('paused', document.hidden);
+  });
+
+  /* ---------------- flow diagram ---------------- */
+  var flow = document.getElementById('flow');
+  var canvas = document.getElementById('flowCanvas');
+  var ctx = canvas.getContext('2d');
+  var unitsEl = document.getElementById('units');
+  var stateText = document.getElementById('flowStateText');
+  var stateWrap = document.getElementById('flowState');
+  var UNITS = [
+    {name:'Arrival', short:'Arrival', u:.05},
+    {name:'Triage', short:'Triage', u:.22},
+    {name:'Emergency', short:'ER', u:.40},
+    {name:'Imaging', short:'Imaging', u:.585, constraint:true},
+    {name:'Ward', short:'Ward', u:.77},
+    {name:'Discharge', short:'Discharge', u:.95}
+  ];
+  var UC = .585;
+  var hoverUnit = -1;
+
+  UNITS.forEach(function(un, i){
+    var li = document.createElement('li');
+    li.className = 'unit' + (un.constraint ? ' is-constraint' : '');
+    li.style.left = (un.u*100) + '%';
+    var s = document.createElement('span');
+    s.textContent = un.name;
+    s.setAttribute('data-short', un.short);
+    li.appendChild(s);
+    li.addEventListener('mouseenter', function(){ hoverUnit = i; if(!running) draw(); });
+    li.addEventListener('mouseleave', function(){ hoverUnit = -1; if(!running) draw(); });
+    unitsEl.appendChild(li);
+    un.label = s;
+  });
+
+  var W = 0, H = 0, dpr = 1;
+  var LANES = 11, PER = 15;
+  var parts = [];
+  for (var l=0; l<LANES; l++){
+    for (var k=0; k<PER; k++){
+      parts.push({lane:l, u:(k + ((l*7)%11)/11)/PER + (Math.random()-.5)*.02, sp:.92 + Math.random()*.16});
+    }
+  }
+
+  function g(x, s){ return Math.exp(-(x*x)/(2*s*s)); }
+  function narrow(u, e){
+    var c = 1 - e;
+    return 1 - c*.72*g(u-UC, .06) + c*.16*g(u-(UC-.13), .07);
+  }
+  function laneY(u, off, e){
+    var cy = H*.47 + Math.sin(u*Math.PI*2 + .6)*H*.035;
+    return cy + off*H*.27*narrow(u, e);
+  }
+  function speed(u, e){
+    var c = 1 - e;
+    return .055 * (1 - c*.8*g(u-(UC-.07), .075));
+  }
+  function laneOff(l){ return (l/(LANES-1))*2 - 1; }
+
+  function resize(){
+    var r = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var compact = W < 560;
+    UNITS.forEach(function(un){ un.label.textContent = compact ? un.short : un.name; });
+    draw();
+  }
+
+  var E = 0; // 0 = constrained, 1 = even
+  function mix(a,b,t){ return a + (b-a)*t; }
+
+  function draw(){
+    if (!W) return;
+    ctx.clearRect(0,0,W,H);
+    var pad = 0, x0 = pad, x1 = W - pad;
+    function X(u){ return x0 + u*(x1-x0); }
+    var STEPS = 90;
+
+    // lanes
+    ctx.lineWidth = 1;
+    for (var l=0; l<LANES; l++){
+      var off = laneOff(l);
+      var a = .06 + (1-Math.abs(off))*.06;
+      ctx.strokeStyle = 'rgba(169,193,255,' + a.toFixed(3) + ')';
+      ctx.beginPath();
+      for (var s=0; s<=STEPS; s++){
+        var u = s/STEPS, y = laneY(u, off, E);
+        if (s===0) ctx.moveTo(X(u), y); else ctx.lineTo(X(u), y);
+      }
+      ctx.stroke();
+    }
+
+    // unit markers
+    UNITS.forEach(function(un, i){
+      var top = laneY(un.u, -1, E) - 10, bot = laneY(un.u, 1, E) + 10;
+      var x = Math.round(X(un.u)) + .5;
+      var col, alpha;
+      if (un.constraint){
+        var r = Math.round(mix(217,170,E)), gg = Math.round(mix(179,190,E)), b = Math.round(mix(122,230,E));
+        col = r+','+gg+','+b; alpha = mix(.75,.32,E);
+      } else { col = '200,212,235'; alpha = .2; }
+      if (i === hoverUnit) alpha = Math.max(alpha, .8);
+      ctx.strokeStyle = 'rgba('+col+','+alpha.toFixed(3)+')';
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot);
+      ctx.moveTo(x-4, top); ctx.lineTo(x+4, top);
+      ctx.moveTo(x-4, bot); ctx.lineTo(x+4, bot);
+      ctx.stroke();
+      if (un.constraint && E < 1){
+        var rr = Math.min(W*.09, 110), halo = ctx.createRadialGradient(x, H*.47, 0, x, H*.47, rr);
+        halo.addColorStop(0, 'rgba(217,179,122,' + ((1-E)*.07).toFixed(3) + ')');
+        halo.addColorStop(1, 'rgba(217,179,122,0)');
+        ctx.fillStyle = halo; ctx.fillRect(x-rr, H*.47-rr, rr*2, rr*2);
+      }
+    });
+
+    // particles
+    for (var i=0; i<parts.length; i++){
+      var p = parts[i], off2 = laneOff(p.lane);
+      var hx = X(p.u), hy = laneY(p.u, off2, E);
+      var tu = p.u - .018*(speed(p.u,E)/.055);
+      var tx = X(tu), ty = laneY(tu, off2, E);
+      var grad = ctx.createLinearGradient(tx, ty, hx, hy);
+      grad.addColorStop(0, 'rgba(169,193,255,0)');
+      grad.addColorStop(1, 'rgba(214,226,255,.75)');
+      ctx.strokeStyle = grad; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+      ctx.fillStyle = 'rgba(169,193,255,.07)';
+      ctx.beginPath(); ctx.arc(hx, hy, 4, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = 'rgba(236,242,255,.95)';
+      ctx.beginPath(); ctx.arc(hx, hy, 1.1, 0, Math.PI*2); ctx.fill();
+    }
+
+    // soft horizontal fade at both ends
+    ctx.globalCompositeOperation = 'destination-in';
+    var fade = ctx.createLinearGradient(0,0,W,0);
+    fade.addColorStop(0,'rgba(0,0,0,0)'); fade.addColorStop(.06,'rgba(0,0,0,1)');
+    fade.addColorStop(.94,'rgba(0,0,0,1)'); fade.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle = fade; ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function step(dt){
+    for (var i=0; i<parts.length; i++){
+      var p = parts[i];
+      p.u += dt * speed(p.u, E) * p.sp;
+      if (p.u > 1.02) p.u -= 1.04;
+    }
+  }
+
+  // cycle: 7s constrained, 3s easing, 6s even, 3s returning
+  var CYCLE = 19, t = 0;
+  function easeIO(x){ return x<.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2,3)/2; }
+  function eAt(tt){
+    if (tt < 7) return 0;
+    if (tt < 10) return easeIO((tt-7)/3);
+    if (tt < 16) return 1;
+    return 1 - easeIO((tt-16)/3);
+  }
+  var shownEased = null;
+  function setState(eased){
+    if (eased === shownEased) return;
+    shownEased = eased;
+    flow.classList.toggle('eased', eased);
+    stateWrap.style.opacity = 0;
+    setTimeout(function(){
+      stateText.textContent = eased ? 'Constraint eased, flow evens out' : 'Flow narrows at the constraint';
+      stateWrap.style.opacity = 1;
+    }, reduce ? 0 : 350);
+  }
+
+  var running = false, last = 0, visible = true, raf = 0;
+  function frame(now){
+    if (!running) return;
+    var dt = Math.min((now - last)/1000, .05); last = now;
+    t = (t + dt) % CYCLE;
+    E = eAt(t);
+    setState(E > .5);
+    step(dt);
+    draw();
+    raf = requestAnimationFrame(frame);
+  }
+  function start(){ if (running || reduce || !visible || document.hidden) return; running = true; last = performance.now(); raf = requestAnimationFrame(frame); }
+  function stop(){ running = false; cancelAnimationFrame(raf); }
+
+  // settle the particles into the constrained pattern before first paint
+  for (var w=0; w<400; w++) step(.05);
+
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas); else window.addEventListener('resize', resize);
+  resize();
+
+  if (reduce){
+    flow.classList.add('still');
+    E = 0; setState(false); draw();
+  } else {
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(en){ visible = en[0].isIntersecting; visible ? start() : stop(); }).observe(flow);
+    }
+    document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : start(); });
+    start();
+  }
+
+  /* ---------------- counters ---------------- */
+  var nums = document.querySelectorAll('.fig .n');
+  if (!reduce && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        var el = en.target, to = parseInt(el.getAttribute('data-to'),10), t0 = null, dur = 1800;
+        function tick(now){
+          if (t0 === null) t0 = now;
+          var k = Math.min((now-t0)/dur, 1), v = 1 - Math.pow(1-k, 4);
+          el.textContent = Math.round(to*v);
+          if (k < 1) requestAnimationFrame(tick); else el.textContent = to;
+        }
+        el.textContent = '0';
+        requestAnimationFrame(tick);
+      });
+    }, {threshold:.6});
+    nums.forEach(function(n){ io.observe(n); });
+  }
+
+  /* ---------------- steps progress ---------------- */
+  var steps = document.getElementById('steps');
+  var items = steps.querySelectorAll('.step');
+  function updateSteps(){
+    var r = steps.getBoundingClientRect(), vh = window.innerHeight;
+    var p = reduce ? 1 : Math.max(0, Math.min(1, (vh*.62 - r.top) / (r.height - 20)));
+    steps.style.setProperty('--p', p.toFixed(4));
+    var reach = 10 + p*(r.height - 20);
+    items.forEach(function(it){ it.classList.toggle('lit', it.offsetTop + 12 <= reach + 1); });
+  }
+  var ticking = false;
+  function onScroll(){ if (ticking) return; ticking = true; requestAnimationFrame(function(){ ticking = false; updateSteps(); }); }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  updateSteps();
+
+  /* ---------------- light-follow cards ---------------- */
+  document.querySelectorAll('.lit-card').forEach(function(c){
+    c.addEventListener('pointermove', function(e){
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* ---------------- copy ---------------- */
+  var status = document.getElementById('copyStatus');
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.getAttribute('data-copy')), text = el.textContent.trim();
+      var what = b.getAttribute('data-copy') === 'email' ? 'Email address' : 'Phone number';
+      function ok(){ b.textContent = 'Copied'; b.classList.add('done'); status.textContent = what + ' copied'; setTimeout(function(){ b.textContent = 'Copy'; b.classList.remove('done'); }, 2000); }
+      function fallback(){
+        var sel = window.getSelection(), range = document.createRange();
+        range.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(range);
+        var done = false; try { done = document.execCommand('copy'); } catch(e){}
+        if (done) ok(); else { status.textContent = what + ' selected. Press Ctrl+C or Cmd+C to copy.'; b.textContent = 'Selected'; setTimeout(function(){ b.textContent = 'Copy'; }, 2400); }
+      }
+      if (navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(ok, fallback); } else fallback();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
