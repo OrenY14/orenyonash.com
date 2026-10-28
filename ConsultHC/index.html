@@ -218,6 +218,19 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
+/* ---------- organisations (logos) ---------- */
+.orgs h2{max-width:none;margin-bottom:40px}
+.orgs ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:900px){.orgs ul{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
+.orgs li{position:relative;display:flex;align-items:center;justify-content:center;min-height:104px;padding:24px 14px;border-radius:14px;background:var(--ink);outline:none;
+  transition:box-shadow .3s var(--ease)}
+.orgs img{display:block;height:32px;width:auto;max-width:100%;object-fit:contain;filter:grayscale(1);opacity:.78;transition:filter .4s var(--ease),opacity .4s var(--ease)}
+@media (min-width:900px){.orgs li{min-height:120px;padding:28px 20px}.orgs img{height:40px}}
+.orgs li:hover img,.orgs li:focus-visible img,.orgs li:focus img{filter:none;opacity:1}
+.orgs li:focus-visible{box-shadow:0 0 0 2px var(--void),0 0 0 4px var(--focus)}
+.orgs .cap{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-family:var(--mono);font-size:10.5px;line-height:1.2;color:#5A6472}
+@media (min-width:900px){.orgs .cap{bottom:12px;font-size:11px}}
+
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .ambient .glow{animation:none}
@@ -344,7 +357,7 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
     <div class="split">
       <div>
         <h2 id="h-contact">Contact</h2>
-        <p class="note">To talk about flow in your hospital, write or call Oren directly.</p>
+        <p class="note">To talk about flow in your organisation, write or call Oren directly.</p>
       </div>
       <div>
         <ul class="lines">
@@ -354,6 +367,16 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
         <p class="sr" id="copyStatus" aria-live="polite"></p>
       </div>
     </div>
+  </section>
+
+  <section class="block orgs" aria-labelledby="h-orgs">
+    <h2 id="h-orgs">Organisations Oren has worked with</h2>
+    <ul>
+      <li tabindex="0"><img src="logos/sourasky-en.svg" alt="Tel Aviv Sourasky Medical Center (Ichilov)" width="196" height="40" loading="lazy" decoding="async"></li>
+      <li tabindex="0"><img src="logos/hadassah.svg" alt="Hadassah Medical Center" width="88" height="40" loading="lazy" decoding="async"><span class="cap">Ein Kerem · Mount Scopus</span></li>
+      <li tabindex="0"><img src="logos/ministry-of-health.png" alt="Israel Ministry of Health" width="75" height="40" loading="lazy" decoding="async"></li>
+      <li tabindex="0"><img src="logos/jnj-innovative-medicine.svg" alt="Johnson &amp; Johnson Innovative Medicine (formerly Janssen)" width="200" height="40" loading="lazy" decoding="async"></li>
+    </ul>
   </section>
 
   <footer><span>Oren Yonash</span><span>Hospitals and health systems</span></footer>
