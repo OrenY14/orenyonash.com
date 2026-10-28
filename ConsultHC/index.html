@@ -72,7 +72,9 @@ a{color:inherit}
 .nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
 .nav ul a{font-size:14px;color:var(--ink-2);text-decoration:none;transition:color .3s var(--ease)}
 .nav ul a:hover{color:var(--ink)}
-@media (max-width:640px){.nav ul li:not(:last-child){display:none}}
+@media (max-width:640px){.nav ul li:not(:last-child){display:none}.nav ul li:nth-last-child(2){display:list-item}}
+.nav ul .lang a{font-family:var(--mono);font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:4px 10px}
+.nav ul .lang a:hover{border-color:rgba(255,255,255,.3)}
 
 /* ---------- hero ---------- */
 .hero{padding:clamp(48px,6vw,72px) 0 0}
@@ -120,6 +122,7 @@ a{color:inherit}
 .fig:nth-child(2n){border-right:0;padding-left:20px}
 .fig:nth-child(-n+2){border-bottom:1px solid var(--line)}
 .fig .n{display:block;font-weight:200;font-size:clamp(56px,7.4vw,104px);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.fig .n.approx::before{content:"~"}
 .fig p{margin:14px 0 0;font-size:14px;line-height:1.45;color:var(--ink-2);max-width:26ch}
 @media (min-width:900px){
   .figures{grid-template-columns:repeat(4,1fr)}
@@ -158,6 +161,11 @@ p{max-width:64ch}
 .step h3{margin:0;font-size:clamp(20px,2vw,25px);font-weight:500;letter-spacing:-.02em;line-height:1.25;color:var(--ink-2);transition:color .6s var(--ease)}
 .step.lit h3{color:var(--ink)}
 .step p{margin:8px 0 0;color:var(--ink-2);font-size:16px}
+.step.key .key-tag{font-family:var(--mono);color:var(--amber)}
+.step.key h3{color:var(--ink)}
+.step.key::before{border-color:var(--amber)}
+.step.key.lit::before{border-color:var(--amber);box-shadow:0 0 0 5px rgba(217,179,122,.10)}
+.step.key .key-line{margin-top:14px;padding-inline-start:16px;border-inline-start:1px solid var(--amber);color:var(--ink);font-size:clamp(17px,1.5vw,19px);line-height:1.6;max-width:52ch}
 
 /* ---------- cards ---------- */
 .lit-card{position:relative;isolation:isolate;--mx:50%;--my:50%}
@@ -229,6 +237,7 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
       <li><a href="#approach">Approach</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li class="lang"><a href="he/" lang="he" hreflang="he" aria-label="גרסה בעברית">עב</a></li>
     </ul>
   </nav>
 
@@ -236,7 +245,7 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
     <h1>Oren Yonash</h1>
     <div class="hero-meta">
       <p class="role">Operations and management consultant to hospitals and health systems</p>
-      <p class="lede">Oren helps hospital leaders get more from the capacity they already have: shorter waits, better flow and more patients treated with the same staff, beds and budget. He was the leading consultant at Focused Management, Prof. Boaz Ronen's consulting firm, and has trained Israeli doctors and hospital managers at Tel Aviv University for 11 years. He also builds AI products himself, so his work joins process and technology.</p>
+      <p class="lede">Oren helps hospital leaders get more from the capacity they already have: shorter waits, better flow and more patients treated with the same staff, beds and budget. He was a senior consultant at Focused Management, Prof. Boaz Ronen's consulting firm, and has trained Israeli doctors and hospital managers at Tel Aviv University for about 15 years. He also builds AI products himself, so his work joins process and technology.</p>
     </div>
   </header>
 
@@ -252,8 +261,8 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
   </figure>
 
   <div class="figures" id="figures">
-    <div class="fig"><span class="n" data-to="11">11</span><p>years training doctors and hospital managers at Tel Aviv University</p></div>
-    <div class="fig"><span class="n" data-to="3">3</span><p>hospitals as Focused Management's leading consultant</p></div>
+    <div class="fig"><span class="n approx" data-to="15">15</span><p>years training doctors and hospital managers at Tel Aviv University</p></div>
+    <div class="fig"><span class="n" data-to="3">3</span><p>hospitals as a senior consultant at Focused Management</p></div>
     <div class="fig"><span class="n" data-to="4">4</span><p>health funds on the national cancer patient journey</p></div>
     <div class="fig"><span class="n" data-to="8">8</span><p>improvement teams in one operating-room system</p></div>
   </div>
@@ -281,11 +290,11 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
           <ol class="steplist">
           <li class="step"><span class="num">01</span><h3>The CEO owns the process</h3><p>and is the go-to person for decisions, which is what overcomes resistance to change.</p></li>
           <li class="step"><span class="num">02</span><h3>A champion, appointed by the CEO</h3><p>keeps every project team moving, and removes most work from the CEO.</p></li>
-          <li class="step"><span class="num">03</span><h3>Interviews first</h3><p>Oren interviews the teams and learns the processes before anything is proposed.</p></li>
-          <li class="step"><span class="num">04</span><h3>A one or two day management workshop</h3><p>gives leaders the language and logic, and they choose the projects, for example the ICU, the ER, the operating rooms or the delivery room.</p></li>
-          <li class="step"><span class="num">05</span><h3>A two or three day staff workshop</h3><p>in which each project team defines its project, gets trained on the required skills, and starts work. Teams include everyone who touches the process: the head of department, doctors, nurses, the secretary, even cleaning staff.</p></li>
+          <li class="step"><span class="num">03</span><h3>Interviews first</h3><p>Oren interviews the teams, observes the work on the floor where needed, and learns the processes before anything is proposed.</p></li>
+          <li class="step"><span class="num">04</span><h3>A one or two day management workshop</h3><p>gives leaders the language and logic, and they choose the projects. Every hospital has its own focus areas, for example the ER, the operating rooms, the ICU, the delivery room and more.</p></li>
+          <li class="step key"><span class="num">05 <span class="key-tag">· The heart of the method</span></span><h3>A two or three day staff workshop</h3><p>in which each project team defines its project, gets trained on the required skills, and starts work. Teams include everyone who touches the process: the head of department, doctors, nurses, the secretary, even cleaning staff.</p><p class="key-line">This is the heart of the method: the knowledge, the know-how, the buy-in and the ongoing improvement grow out of these teams, because they are gained by doing, not only by talking in interviews.</p></li>
           <li class="step"><span class="num">06</span><h3>Hands-on support for weeks</h3><p>working with the teams on implementation.</p></li>
-          <li class="step"><span class="num">07</span><h3>Every team sets a goal, measures it and reports to the CEO</h3></li>
+          <li class="step"><span class="num">07</span><h3>Every team sets a clear goal, measures it and reports to the CEO</h3></li>
           </ol>
         </div>
       </div>
@@ -296,7 +305,7 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
     <div class="split">
       <h2 id="h-gets">What your hospital gets</h2>
       <div class="gets">
-        <div class="lit-card"><p>A management team that speaks one language of flow, constraints and focus.</p></div>
+        <div class="lit-card"><p>One language of flow, constraints and focus, from management and department heads to the doctors, nurses and entire departments.</p></div>
         <div class="lit-card"><p>Several improvement projects running at once, each with its own team.</p></div>
         <div class="lit-card"><p>Visible value within weeks, while the deeper root causes are worked through over the engagement.</p></div>
         <div class="lit-card"><p>Goals and results measured with OKRs and reported to the CEO.</p></div>
@@ -308,11 +317,10 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
   <section class="block" id="experience" aria-labelledby="h-exp">
     <h2 id="h-exp" style="margin-bottom:40px">Selected experience</h2>
     <div class="cases">
-      <article class="case lit-card wide"><h3>Three hospitals</h3><p>As Focused Management's leading consultant: emergency rooms, operating rooms, hemato-oncology, MRI, X-ray and more. This included the operating-room system of a leading academic medical centre across two campuses, with a CEO-level steering committee and eight improvement teams.</p></article>
+      <article class="case lit-card wide"><h3>Three hospitals</h3><p>As a senior consultant at Focused Management: emergency rooms, operating rooms, hemato-oncology, MRI, X-ray and more. This included the operating-room system of a leading academic medical centre across two campuses, with a CEO-level steering committee and eight improvement teams.</p></article>
       <article class="case lit-card"><h3>The national cancer patient journey</h3><p>With the Ministry of Health, Rambam Hospital and all four health funds.</p></article>
-      <article class="case lit-card"><h3>One of Israel's largest banks</h3><p>Technology budgeting, commercial credit approval times and dealing-room productivity.</p></article>
-      <article class="case lit-card"><h3>Government companies</h3><p>The senior managers' programme run with the Government Companies Authority.</p></article>
-      <article class="case lit-card"><h3>Hundreds of improvement projects</h3><p>With students during university classes, across hospitals, health funds, and the security and private sectors as well.</p></article>
+      <article class="case lit-card"><h3>One of Israel's largest banks</h3><p>Technology budgeting, commercial credit approval times, dealing-room productivity and more.</p></article>
+      <article class="case lit-card wide"><h3>Hundreds of improvement projects</h3><p>With students during university classes, across hospitals, health funds, and the security and private sectors as well.</p></article>
     </div>
   </section>
 
@@ -326,8 +334,8 @@ footer{margin-top:clamp(80px,10vw,140px);padding:24px 0 max(32px, env(safe-area-
       <div class="prose">
         <h2 id="h-bg">Background</h2>
         <p>Founder of Klarecon Ltd, which at its peak managed more than 300 employees worldwide.</p>
-        <p>Today Klarecon is a small team building management tools using best practices from management and built using AI systems, including OBOT, an AI consultant that solves managers' day-to-day flow and focus problems, with healthcare as one of its specialties.</p>
-        <p>Oren heads his city's police emergency defence unit, overseeing about 70 people. He dances, loves chess and is a father of two.</p>
+        <p>Today Klarecon is a small team building management tools using best practices from management and built using AI systems, including JC, an AI consultant that helps managers with day-to-day flow and focus problems, with healthcare as one of its specialties.</p>
+        <p>Oren heads his city's police standby units (about 70 people). He dances, loves chess and is a father of two.</p>
       </div>
     </div>
   </section>
