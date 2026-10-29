@@ -2443,8 +2443,8 @@ function pickerOpen() {
 // ---- Class contest (ג1 vs ג2): who is playing, score saving, results, leaderboard ----
 const API = "https://script.google.com/macros/s/AKfycbyWyywWy6wMMf6kXPzsT3VSMEZZoat5Y1QRUxcmGLGIpfuu_vfPlAjOPaA6Dfne-Tih/exec";
 const DEFAULT_ROSTER: { name: string; cls: string }[] = [
-  ...["עידו", "גילי", "נועה", "איתי", "מאיה", "יונתן", "תמר", "אורי", "שירה", "דניאל", "עמית", "ליה"].map((n) => ({ name: n, cls: "ג1" })),
-  ...["רני", "עוז", "יואב", "אביגיל", "אלון", "הילה", "נדב", "ניצן", "איתמר", "טליה", "ארבל", "עומר"].map((n) => ({ name: n, cls: "ג2" })),
+  ...["גילי", "עידו", "לביא טנג'ר", "שחף", "מיכאל", "דניאל", "ברק", "צור", "מירון", "איתי בר", "איתי זייד", "דין", "יערה", "אביב", "עדן", "אריה", "שירה", "שי", "אמה", "גאיה", "איימי", "אוריין", "אוולין", "מאיה"].map((n) => ({ name: n, cls: "ג1" })),
+  ...["רני", "עוז", "זוהר", "ג'וני", "מתן", "יובל", "לביא סלפטר", "לוי", "לני", "עמרי", "טליה", "אמילי", "עומר", "גל", "כרמל", "אנאבל", "ינטל", "אריאל", "רוני", "נועה", "נינה"].map((n) => ({ name: n, cls: "ג2" })),
 ];
 const CLASSES = ["ג1", "ג2"];
 type Player = { name: string; cls: string };
